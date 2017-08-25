@@ -16,10 +16,10 @@ import com.github.mikephil.charting.utils.ColorTemplate
 
 class MainActivity : AppCompatActivity() {
 
-    private fun generateBarsData(daysInMonth : Int) : BarData {
+    private fun generateBarsData(daysInMonth : Int, visibleDays : Int = daysInMonth) : BarData {
         // generate percentage for all the months
         val fDOM = daysInMonth.toFloat()
-        val data = List(daysInMonth) {
+        val data = List(visibleDays) {
             val safe = it / fDOM
             BarEntry(it.toFloat(), floatArrayOf(safe, 1f - safe))
         }
@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         lineSet.valueTextSize = 10f
         lineSet.valueTextColor = Color.BLACK
         lineSet.setCircleColor(Color.BLACK)
-        lineSet.setDrawValues(true)
+        lineSet.setDrawValues(false)
         lineSet.axisDependency = YAxis.AxisDependency.LEFT
 
         lineData.addDataSet(lineSet)
@@ -77,17 +77,21 @@ class MainActivity : AppCompatActivity() {
         chart.setDrawGridBackground(false)
         chart.setDrawBarShadow(false)
         chart.isHighlightFullBarEnabled = false
+        chart.xAxis.valueFormatter = DateAxisFormatter()
+        chart.xAxis.granularity = 1f
+        chart.axisLeft.valueFormatter = PercentAxisFormatter()
+        chart.axisLeft.granularity = .01f
+        chart.axisRight.setDrawLabels(false)
 
         chart.drawOrder = arrayOf(CombinedChart.DrawOrder.BAR, CombinedChart.DrawOrder.LINE)
 
         // TODO Legend
 
         val comboData = CombinedData()
-        comboData.setData(generateBarsData(30))
         // TODO change to some real data
-        comboData.setData(generateLineData(listOf(
-                0f, 0f, .1f, .15f, .16f, .2f, .2f, .2f, .3f, .8f, .8f
-        )))
+        val data = listOf(0f, 0f, .1f, .15f, .16f, .2f, .2f, .2f, .3f, .8f, .8f)
+        comboData.setData(generateBarsData(31, data.size))
+        comboData.setData(generateLineData(data))
         chart.data = comboData
         chart.invalidate()
     }
