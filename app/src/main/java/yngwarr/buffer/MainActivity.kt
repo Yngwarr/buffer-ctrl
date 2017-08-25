@@ -9,14 +9,14 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.charts.CombinedChart
 import com.github.mikephil.charting.components.YAxis
-import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.data.*
+import com.github.mikephil.charting.utils.ColorTemplate
 
 class MainActivity : AppCompatActivity() {
 
-    fun generateBufChartData(daysInMonth : Int) : BarData {
+    private fun generateBarsData(daysInMonth : Int) : BarData {
         // generate percentage for all the months
         val fDOM = daysInMonth.toFloat()
         val data = List(daysInMonth) {
@@ -24,14 +24,37 @@ class MainActivity : AppCompatActivity() {
             BarEntry(it.toFloat(), floatArrayOf(safe, 1f - safe))
         }
         // contains data and style data
-        val barSet = BarDataSet(data, "Buffer Usage")
+        // TODO localization
+        val barSet = BarDataSet(data, "Buffer Available")
         barSet.stackLabels = arrayOf("Acceptable Zone", "Cautious Zone")
         barSet.colors = listOf(Color.rgb(16, 255, 16), Color.rgb(255, 16, 16))
+        barSet.setDrawValues(false)
         //barSet.axisDependency = YAxis.AxisDependency.LEFT
         // TODO add some more style
         val barData = BarData(barSet)
         barData.barWidth = 1f
         return barData
+    }
+
+    private fun generateLineData(vals : List<Float>) : LineData {
+        val lineData = LineData()
+        val data = List(vals.size) {
+            Entry(it.toFloat() /*+ .5f*/, vals[it])
+        }
+
+        val lineSet = LineDataSet(data, "Buffer Usage")
+        lineSet.color = Color.BLACK
+        lineSet.lineWidth = 2.5f
+        lineSet.circleRadius = 5f
+        lineSet.mode = LineDataSet.Mode.LINEAR
+        lineSet.valueTextSize = 10f
+        lineSet.valueTextColor = Color.BLACK
+        lineSet.setCircleColor(Color.BLACK)
+        lineSet.setDrawValues(true)
+        lineSet.axisDependency = YAxis.AxisDependency.LEFT
+
+        lineData.addDataSet(lineSet)
+        return lineData
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,7 +63,7 @@ class MainActivity : AppCompatActivity() {
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
 
-        // TODO add button
+        // TODO add button functionality
         val fab = findViewById(R.id.fab) as FloatingActionButton
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -48,10 +71,24 @@ class MainActivity : AppCompatActivity() {
         }
 
         // chart data
-        // TODO fill chart data
-        val chart = findViewById(R.id.chart) as BarChart
-        chart.data = generateBufChartData(30)
-        chart.setFitBars(true)
+        val chart = findViewById(R.id.chart) as CombinedChart
+        chart.description.isEnabled = false
+        chart.setBackgroundColor(Color.WHITE)
+        chart.setDrawGridBackground(false)
+        chart.setDrawBarShadow(false)
+        chart.isHighlightFullBarEnabled = false
+
+        chart.drawOrder = arrayOf(CombinedChart.DrawOrder.BAR, CombinedChart.DrawOrder.LINE)
+
+        // TODO Legend
+
+        val comboData = CombinedData()
+        comboData.setData(generateBarsData(30))
+        // TODO change to some real data
+        comboData.setData(generateLineData(listOf(
+                0f, 0f, .1f, .15f, .16f, .2f, .2f, .2f, .3f, .8f, .8f
+        )))
+        chart.data = comboData
         chart.invalidate()
     }
 

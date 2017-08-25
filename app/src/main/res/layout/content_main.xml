@@ -8,7 +8,7 @@
     tools:context="yngwarr.buffer.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <com.github.mikephil.charting.charts.BarChart
+    <com.github.mikephil.charting.charts.CombinedChart
         android:id="@+id/chart"
         android:layout_width="352dp"
         android:layout_height="479dp"
