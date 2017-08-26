@@ -1,5 +1,6 @@
 package yngwarr.buffer
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
@@ -57,6 +58,11 @@ class MainActivity : AppCompatActivity() {
         return lineData
     }
 
+    private fun openEditScreen() {
+        val intent = Intent(this, EditActivity::class.java)
+        startActivity(intent)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -108,10 +114,14 @@ class MainActivity : AppCompatActivity() {
         // as you specify a parent activity in AndroidManifest.xml.
         val id = item.itemId
 
-
-        return if (id == R.id.action_settings) {
-            true
-        } else super.onOptionsItemSelected(item)
+        return when (id) {
+            R.id.action_settings -> true
+            R.id.action_edit -> {
+                openEditScreen()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
 
     }
 }
