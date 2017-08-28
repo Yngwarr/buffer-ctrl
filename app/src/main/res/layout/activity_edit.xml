@@ -44,7 +44,7 @@
                 android:layout_weight="1">
 
                 <EditText
-                    android:id="@+id/edit_outcome"
+                    android:id="@+id/edit_outgo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -57,6 +57,7 @@
                 android:id="@+id/edit_submit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:onClick="submitData"
                 android:text="@string/edit_submit" />
 
         </LinearLayout>

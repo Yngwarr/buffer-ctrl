@@ -1,5 +1,6 @@
 package yngwarr.buffer
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -7,15 +8,18 @@ import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.CombinedChart
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.*
-import com.github.mikephil.charting.utils.ColorTemplate
 
 class MainActivity : AppCompatActivity() {
+
+    // request code to earn the result of EditActivity
+    private val REQ_EDIT = 0
+    private val plan = MonthlyPlan(6000f, 1500f)
 
     private fun generateBarsData(daysInMonth : Int, visibleDays : Int = daysInMonth) : BarData {
         // generate percentage for all the months
@@ -60,23 +64,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun openEditScreen() {
         val intent = Intent(this, EditActivity::class.java)
-        startActivity(intent)
+        intent.putExtra("yngwarr.buffer.EXTRA_INCOME", plan.income)
+        intent.putExtra("yngwarr.buffer.EXTRA_OUTGO", plan.outgo)
+        startActivityForResult(intent, REQ_EDIT)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
-        setSupportActionBar(toolbar)
-
-        // TODO add button functionality
-        val fab = findViewById(R.id.fab) as FloatingActionButton
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        }
-
-        // chart data
+    // creates a visual interpretation to be shown
+    private fun createChart() : CombinedChart {
         val chart = findViewById(R.id.chart) as CombinedChart
         chart.description.isEnabled = false
         chart.setBackgroundColor(Color.WHITE)
@@ -88,15 +82,38 @@ class MainActivity : AppCompatActivity() {
         chart.axisLeft.valueFormatter = PercentAxisFormatter()
         chart.axisLeft.granularity = .01f
         chart.axisRight.setDrawLabels(false)
-
         chart.drawOrder = arrayOf(CombinedChart.DrawOrder.BAR, CombinedChart.DrawOrder.LINE)
+        // TODO add appropriate legend
+        return chart
+    }
 
-        // TODO Legend
+    private fun updateChart() {
+        // TODO recalculate a percentage & redraw the chart
+        Log.d("MUSHROOM", "Income: ${plan.income}, Outcome: ${plan.outgo}")
+    }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        val toolbar = findViewById(R.id.toolbar) as Toolbar
+        setSupportActionBar(toolbar)
+
+        // TODO add button functionality
+        // TODO change the button icon
+        val fab = findViewById(R.id.fab) as FloatingActionButton
+        fab.setOnClickListener { view ->
+            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show()
+        }
+
+        // TODO take the plan data from a DB
+
+        // creating a visual representation
+        val chart = createChart()
         val comboData = CombinedData()
         // TODO change to some real data
         val data = listOf(0f, 0f, .1f, .15f, .16f, .2f, .2f, .2f, .3f, .8f, .8f)
-        comboData.setData(generateBarsData(31, data.size))
+        comboData.setData(generateBarsData(plan.daysInMonth, data.size))
         comboData.setData(generateLineData(data))
         chart.data = comboData
         chart.invalidate()
@@ -123,5 +140,20 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
 
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            REQ_EDIT -> {
+                if (resultCode != Activity.RESULT_OK) return
+                if (data == null) return
+                val income = data.getFloatExtra("yngwarr.buffer.EXTRA_INCOME", -1f)
+                val outgo = data.getFloatExtra("yngwarr.buffer.EXTRA_OUTGO", -1f)
+                if (income >= 0) plan.income = income
+                if (outgo >= 0) plan.outgo = outgo
+                updateChart()
+            }
+        }
     }
 }
