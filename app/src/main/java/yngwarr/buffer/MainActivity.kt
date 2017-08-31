@@ -11,9 +11,13 @@ import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import com.github.mikephil.charting.charts.CombinedChart
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.*
+import org.jetbrains.anko.db.SqlOrderDirection
+import org.jetbrains.anko.db.select
 
 class MainActivity : AppCompatActivity() {
 
@@ -107,6 +111,23 @@ class MainActivity : AppCompatActivity() {
         }
 
         // TODO take the plan data from a DB
+        database.use{
+            // TODO do it async
+            val e = DBContract.Companion.PlanEntry
+            val plans = select(e.TABLE_NAME, "*")
+                    .orderBy(e.COL_DATE, SqlOrderDirection.DESC)
+                    .exec {
+                        this // это сраный курсор. Живи с этим знанием как хочешь. -_-
+                        // TODO parse data, check if null, send to Edit if so
+                        // TODO take plans, form a list, let user switch it
+                    }
+        }
+
+        val dropdownDate = findViewById(R.id.dropdown_date) as Spinner
+        val adapter = ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item,
+                listOf("May 2017", "June 2017", "July 2017", "Aug 2017"))
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        dropdownDate.adapter = adapter
 
         // creating a visual representation
         val chart = createChart()
