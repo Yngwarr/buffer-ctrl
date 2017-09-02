@@ -22,6 +22,25 @@
         android:layout_marginBottom="8dp"
         android:weightSum="1">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.15"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/dropdown_month"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <Spinner
+                android:id="@+id/dropdown_year"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
+
         <com.github.mikephil.charting.charts.CombinedChart
             android:id="@+id/chart"
             android:layout_width="match_parent"
@@ -38,11 +57,55 @@
             app:layout_constraintTop_toTopOf="parent"
             android:layout_weight="0.76" />
 
-        <Spinner
-            android:id="@+id/dropdown_date"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.15" />
+            android:layout_height="50dp"
+            android:layout_weight="0.15"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="openAddDialog"
+                android:text="@string/btn_add" />
+
+            <Button
+                android:id="@+id/btn_sub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="openAddDialog"
+                android:text="@string/btn_sub" />
+
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_weight="0.15">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ListView
+                    android:id="@+id/list_show"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <Button
+                    android:id="@+id/btn_show_all"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="openListScreen"
+                    android:text="@string/btn_show_all" />
+
+            </LinearLayout>
+        </ScrollView>
 
     </LinearLayout>
 

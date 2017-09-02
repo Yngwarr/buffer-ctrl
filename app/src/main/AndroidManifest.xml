@@ -19,7 +19,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".EditActivity"></activity>
+        <activity android:name=".EditActivity" />
+        <activity android:name=".ListActivity" />
+        <activity android:name=".AddActivity"
+            android:theme="@android:style/Theme.DeviceDefault.Light.Dialog" />
     </application>
 
 </manifest>

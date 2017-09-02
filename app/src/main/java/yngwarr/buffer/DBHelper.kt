@@ -22,15 +22,15 @@ class DBHelper(ctx : Context)
     override fun onCreate(db: SQLiteDatabase) {
         val planEntry = DBContract.Companion.PlanEntry
         val spendEntry = DBContract.Companion.SpendingEntry
-        db.createTable(planEntry.TABLE_NAME, true,
-                planEntry.COL_DATE to TEXT + PRIMARY_KEY,
-                planEntry.COL_INCOME to REAL,
-                planEntry.COL_OUTGO to REAL)
-        db.createTable(spendEntry.TABLE_NAME, true,
-                spendEntry.COL_ID to INTEGER + PRIMARY_KEY + UNIQUE,
-                spendEntry.COL_DATE to TEXT,
-                spendEntry.COL_VALUE to REAL,
-                spendEntry.COL_COMMENT to TEXT)
+//        db.createTable(planEntry.TABLE_NAME, true,
+//                planEntry.COL_DATE to TEXT + PRIMARY_KEY,
+//                planEntry.COL_INCOME to REAL,
+//                planEntry.COL_OUTGO to REAL)
+//        db.createTable(spendEntry.TABLE_NAME, true,
+//                spendEntry.COL_ID to INTEGER + PRIMARY_KEY + UNIQUE,
+//                spendEntry.COL_DATE to TEXT,
+//                spendEntry.COL_VALUE to REAL,
+//                spendEntry.COL_COMMENT to TEXT)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {

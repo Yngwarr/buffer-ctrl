@@ -6,4 +6,7 @@
     <string name="edit_outcome">Monthly outgo</string>
     <string name="edit_submit">Update</string>
     <string name="error_outgo">Expenditure cannot be greater than earnings.</string>
+    <string name="btn_add">Add</string>
+    <string name="btn_sub">Sub</string>
+    <string name="btn_show_all">Show all</string>
 </resources>
