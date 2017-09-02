@@ -2,6 +2,7 @@ package yngwarr.buffer
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
+import android.util.Log
 import org.jetbrains.anko.db.*
 
 class DBHelper(ctx : Context)
@@ -22,15 +23,19 @@ class DBHelper(ctx : Context)
     override fun onCreate(db: SQLiteDatabase) {
         val planEntry = DBContract.Companion.PlanEntry
         val spendEntry = DBContract.Companion.SpendingEntry
-//        db.createTable(planEntry.TABLE_NAME, true,
-//                planEntry.COL_DATE to TEXT + PRIMARY_KEY,
-//                planEntry.COL_INCOME to REAL,
-//                planEntry.COL_OUTGO to REAL)
-//        db.createTable(spendEntry.TABLE_NAME, true,
-//                spendEntry.COL_ID to INTEGER + PRIMARY_KEY + UNIQUE,
-//                spendEntry.COL_DATE to TEXT,
-//                spendEntry.COL_VALUE to REAL,
-//                spendEntry.COL_COMMENT to TEXT)
+        Log.d("БАЗА", "СОЗДАНА")
+        db.createTable(planEntry.TABLE_NAME, true,
+                planEntry.COL_YEAR to INTEGER + PRIMARY_KEY,
+                planEntry.COL_MONTH to INTEGER + PRIMARY_KEY,
+                planEntry.COL_INCOME to REAL,
+                planEntry.COL_OUTGO to REAL)
+        db.createTable(spendEntry.TABLE_NAME, true,
+                spendEntry.COL_ID to INTEGER + PRIMARY_KEY + UNIQUE,
+                spendEntry.COL_YEAR to INTEGER,
+                spendEntry.COL_MONTH to INTEGER,
+                spendEntry.COL_DAY to INTEGER,
+                spendEntry.COL_VALUE to REAL,
+                spendEntry.COL_COMMENT to TEXT)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -43,3 +48,4 @@ class DBHelper(ctx : Context)
 // Access property for Context
 val Context.database: DBHelper
     get() = DBHelper.getInstance(applicationContext)
+

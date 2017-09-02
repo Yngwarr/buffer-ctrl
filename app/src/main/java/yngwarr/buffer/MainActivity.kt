@@ -17,9 +17,9 @@ import android.widget.Spinner
 import com.github.mikephil.charting.charts.CombinedChart
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.*
-import org.jetbrains.anko.db.SqlOrderDirection
-import org.jetbrains.anko.db.select
+import org.jetbrains.anko.db.*
 import java.text.DateFormatSymbols
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -124,22 +124,51 @@ class MainActivity : AppCompatActivity() {
         }
 
         // TODO take the plan data from a DB
-//        database.use{
-//            // TODO do it async
-//            val e = DBContract.Companion.PlanEntry
-//            val plans = select(e.TABLE_NAME, "*")
-//                    .orderBy(e.COL_DATE, SqlOrderDirection.DESC)
-//                    .exec {
-//                        this // это сраный курсор. Живи с этим знанием как хочешь. -_-
-//                        // TODO parse data, check if null, send to Edit if so
-//                        // TODO take plans, form a list, let user switch it
-//                    }
-//        }
+        database.use{
+            // TODO do it async
+            val e = DBContract.Companion.PlanEntry
+            // current date
+            val curr_month = Calendar.getInstance().get(Calendar.MONTH) + 1
+            val curr_year = Calendar.getInstance().get(Calendar.YEAR)
+            // fill the plan
+            select(e.TABLE_NAME, e.COL_INCOME, e.COL_OUTGO)
+                    .whereArgs(" {cm} = {m} and {cy} = {y}",
+                            "cm" to e.COL_MONTH,
+                            "cy" to e.COL_YEAR,
+                            "m" to curr_month,
+                            "y" to curr_year)
+                    .exec {
+                        val parser = rowParser { income : Float, outgo : Float ->
+                            Pair(income, outgo)
+                        }
+                        val new_plan = try {
+                            parseSingle(parser)
+                        } catch (e : Exception) {
+                            openEditScreen()
+                            null
+                        }
+                        if (new_plan != null) {
+                            plan.income = new_plan.first
+                            plan.outgo = new_plan.second
+                        }
+                    }
+            select(e.TABLE_NAME, e.COL_YEAR)
+                    .orderBy(e.COL_YEAR, SqlOrderDirection.DESC)
+                    .exec {
+                        years = parseList(rowParser { year : Int ->
+                            year.toString()
+                        })
+                    }
+            // TODO list of the recent changes
+        }
 
         val dropdownMonth = findViewById(R.id.dropdown_month) as Spinner
         val dropdownYear = findViewById(R.id.dropdown_year) as Spinner
-        // TODO take from DB
-        years = listOf("2017")
+        // TODO this seem not good
+        if (years != null) {
+            Log.w("BUDGET", "Didn't get any year, dropping to current")
+            years = listOf(Calendar.getInstance().get(Calendar.YEAR).toString())
+        }
         val months = DateFormatSymbols().months
         val adapterYear = ArrayAdapter<CharSequence>(this,
                 android.R.layout.simple_spinner_item, years)
