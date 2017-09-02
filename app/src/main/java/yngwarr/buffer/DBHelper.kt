@@ -25,12 +25,13 @@ class DBHelper(ctx : Context)
         val spendEntry = DBContract.Companion.SpendingEntry
         Log.d("БАЗА", "СОЗДАНА")
         db.createTable(planEntry.TABLE_NAME, true,
-                planEntry.COL_YEAR to INTEGER + PRIMARY_KEY,
-                planEntry.COL_MONTH to INTEGER + PRIMARY_KEY,
+                planEntry.COL_ID to INTEGER + PRIMARY_KEY,
+                planEntry.COL_YEAR to INTEGER,
+                planEntry.COL_MONTH to INTEGER,
                 planEntry.COL_INCOME to REAL,
                 planEntry.COL_OUTGO to REAL)
         db.createTable(spendEntry.TABLE_NAME, true,
-                spendEntry.COL_ID to INTEGER + PRIMARY_KEY + UNIQUE,
+                spendEntry.COL_ID to INTEGER + PRIMARY_KEY,
                 spendEntry.COL_YEAR to INTEGER,
                 spendEntry.COL_MONTH to INTEGER,
                 spendEntry.COL_DAY to INTEGER,

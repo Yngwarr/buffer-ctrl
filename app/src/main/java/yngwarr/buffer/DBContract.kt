@@ -9,6 +9,7 @@ class DBContract {
         val DB_VERSION = 1
         class PlanEntry : BaseColumns {
             companion object {
+                val COL_ID = "_id"
                 val TABLE_NAME = "plans"
                 val COL_MONTH = "month"
                 val COL_YEAR = "year"

@@ -46,7 +46,7 @@ class EditActivity : AppCompatActivity() {
             val curr_month = Calendar.getInstance().get(Calendar.MONTH) + 1
             val curr_year = Calendar.getInstance().get(Calendar.YEAR)
             select(e.TABLE_NAME, "COUNT(*)")
-                    .whereArgs("{col_month} = {month} and {col_year} = {year}",
+                    .whereArgs(" {col_month} = {month} and {col_year} = {year}",
                             "col_month" to e.COL_MONTH,
                             "col_year" to e.COL_YEAR,
                             "month" to curr_month,
@@ -62,11 +62,11 @@ class EditActivity : AppCompatActivity() {
                                     e.COL_YEAR to curr_year)
                         } else {
                             update(e.TABLE_NAME, e.COL_INCOME to income, e.COL_OUTGO to outgo)
-                                    .whereArgs("{cm} = {m} and {cy} = {y}",
+                                    .whereArgs(" {cm} = {m} and {cy} = {y}",
                                             "cm" to e.COL_MONTH,
                                             "m" to curr_month,
                                             "cy" to e.COL_YEAR,
-                                            "y" to curr_year)
+                                            "y" to curr_year).exec()
                         }
                     }
         }
