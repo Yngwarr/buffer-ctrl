@@ -8,21 +8,21 @@
 
 <img src='https://imgur.com/Uwhijvu.png' width='70%'>
 
-Схема графического интерфейса приложения:
+# Схема графического интерфейса приложения
 
 > <img src='https://order-of-nop.github.io/web-fencing/MainScheme.svg'>
 
-Диаграммы юзкейсов для каждого окна приложения представлены ниже.
+# Диаграммы юзкейсов
 
 ## Main
-<img src='https://order-of-nop.github.io/web-fencing/MainActivity.svg'>
+> <img src='https://order-of-nop.github.io/web-fencing/MainActivity.svg'>
 
 ## Edit
-<img src='https://order-of-nop.github.io/web-fencing/EditActivity.svg'>
+> <img src='https://order-of-nop.github.io/web-fencing/EditActivity.svg'>
 
 ## Add
-<img src='https://order-of-nop.github.io/web-fencing/AddActivity.svg'>
+> <img src='https://order-of-nop.github.io/web-fencing/AddActivity.svg'>
 
 ## List
-<img src='https://order-of-nop.github.io/web-fencing/ListActivity.svg'>
+> <img src='https://order-of-nop.github.io/web-fencing/ListActivity.svg'>
 
