@@ -32,4 +32,4 @@
 
 # Демонстрация работы
 
-[Ссылка на youtube](https://youtube.com)
+[Ссылка на YouTube](https://youtu.be/ipkd7thBMyM).
