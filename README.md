@@ -13,12 +13,16 @@
 > <img src='https://order-of-nop.github.io/web-fencing/MainScheme.svg'>
 
 Диаграммы юзкейсов для каждого окна приложения представлены ниже.
+
 ## Main
 <img src='https://order-of-nop.github.io/web-fencing/MainActivity.svg'>
+
 ## Edit
 <img src='https://order-of-nop.github.io/web-fencing/EditActivity.svg'>
+
 ## Add
 <img src='https://order-of-nop.github.io/web-fencing/AddActivity.svg'>
+
 ## List
 <img src='https://order-of-nop.github.io/web-fencing/ListActivity.svg'>
 
