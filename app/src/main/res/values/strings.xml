@@ -10,4 +10,11 @@
     <string name="btn_sub">Sub</string>
     <string name="btn_show_all">Show all</string>
     <string name="recent_changes">Recent changes</string>
+    <string name="date_label">Date</string>
+    <string name="daily_limit">"Daily limit: "</string>
+    <string-array name="short_list">
+        <item>+ 300</item>
+        <item>- 100</item>
+        <item>- 250</item>
+    </string-array>
 </resources>

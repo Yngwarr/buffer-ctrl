@@ -4,27 +4,26 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.Spinner
+import android.widget.*
 import com.github.mikephil.charting.charts.CombinedChart
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.*
 import org.jetbrains.anko.db.*
 import java.text.DateFormatSymbols
 import java.util.*
+import kotlin.collections.HashMap
 
 class MainActivity : AppCompatActivity() {
 
     // request code to earn the result of EditActivity
     private val REQ_EDIT = 0
+    private val REQ_ADD = 1
     private val plan = MonthlyPlan(6000f, 1500f)
     private var years : List<CharSequence> = emptyList()
 
@@ -83,7 +82,8 @@ class MainActivity : AppCompatActivity() {
 
     fun openAddDialog(view : View) {
         val intent = Intent(this, AddActivity::class.java)
-        startActivity(intent)
+        intent.putExtra("yngwarr.buffer.EXTRA_SUB", view.id == R.id.btn_sub)
+        startActivityForResult(intent, REQ_ADD)
     }
 
     // creates a visual interpretation to be shown
@@ -114,14 +114,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
-
-        // TODO add button functionality
-        // TODO change the button icon
-        val fab = findViewById(R.id.fab) as FloatingActionButton
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        }
 
         // TODO take the plan data from a DB
         database.use{
@@ -178,16 +170,35 @@ class MainActivity : AppCompatActivity() {
         adapterMonth.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         dropdownMonth.adapter = adapterMonth
         dropdownYear.adapter = adapterYear
+        dropdownMonth.setSelection(7)
+
+        createListMock()
 
         // creating a visual representation
         val chart = createChart()
         val comboData = CombinedData()
         // TODO change to some real data
-        val data = listOf(0f, 0f, .1f, .15f, .16f, .2f, .2f, .2f, .3f, .8f, .8f)
+        val data = listOf(0f, 0f, .0f, .05f, .12f, .12f, .18f, .41f, .42f, .48f, .5f, .5f, .51f,
+                .51f, .52f, .52f, .52f, .52f, .55f, .55f)
         comboData.setData(generateBarsData(plan.daysInMonth, data.size))
         comboData.setData(generateLineData(data))
         chart.data = comboData
         chart.invalidate()
+    }
+
+    private var listItems = arrayListOf(
+            hashMapOf("val" to "-100", "msg" to "Snack"),
+            hashMapOf("val" to "+500", "msg" to "HW for Joanne"),
+            hashMapOf("val" to "-230", "msg" to "Dinner")
+    )
+    var listAdapter : SimpleAdapter? = null
+
+    // TODO change to real data
+    private fun createListMock() {
+        val shortList = findViewById(R.id.list_show) as ListView
+        listAdapter = SimpleAdapter(this, listItems, android.R.layout.simple_list_item_2,
+                arrayOf("val", "msg"), intArrayOf(android.R.id.text1, android.R.id.text2))
+        shortList.adapter = listAdapter
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -223,7 +234,22 @@ class MainActivity : AppCompatActivity() {
                 val outgo = data.getFloatExtra("yngwarr.buffer.EXTRA_OUTGO", -1f)
                 if (income >= 0) plan.income = income
                 if (outgo >= 0) plan.outgo = outgo
+                val dailyText = findViewById(R.id.text_limit) as TextView
+                // TODO format 100.00
+                dailyText.text = "${plan.dailyLimit}"
                 updateChart()
+            }
+            REQ_ADD -> {
+                if (resultCode != Activity.RESULT_OK) return
+                if (data == null) return
+                val value = data.getStringExtra("yngwarr.buffer.EXTRA_VAL")
+                val msg = data.getStringExtra("yngwarr.buffer.EXTRA_MSG")
+                // -_-
+                val dailyText = findViewById(R.id.text_limit) as TextView
+                val daily = dailyText.text.toString().toFloat()
+                dailyText.setText((daily + value.toFloat()).toString(), TextView.BufferType.NORMAL)
+                listItems.add(0, hashMapOf("val" to value, "msg" to msg))
+                listAdapter?.notifyDataSetChanged()
             }
         }
     }
